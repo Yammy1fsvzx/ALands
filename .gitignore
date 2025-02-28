@@ -13,10 +13,7 @@ frontend/out/
 build/
 dist/
 
-# Database
-backend/db/*.db
-backend/db/*.sqlite
-backend/db/*.sqlite3
+# Databas
 
 # Logs
 *.log
