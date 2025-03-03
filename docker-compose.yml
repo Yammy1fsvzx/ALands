@@ -1,29 +1,42 @@
 version: '3.8'
 
 services:
-  frontend:
-    build: 
-      context: ./frontend
-      dockerfile: Dockerfile
-    ports:
-      - "3000:3000"
-    environment:
-      - NEXT_PUBLIC_API_URL=http://89.104.70.179:8000
-    depends_on:
-      - backend
-    restart: unless-stopped
-
   backend:
-    build: 
-      context: ./backend
-      dockerfile: Dockerfile
+    build: ./backend
     ports:
       - "8000:8000"
     volumes:
+      - ./backend/static:/app/static
       - ./backend/db:/app/db
-    env_file:
-      - ./backend/.env
-    restart: unless-stopped
+    environment:
+      - SECRET_KEY=your-secret-key-here
+      - UPLOAD_FOLDER=static/images
+      - MAX_CONTENT_LENGTH=16777216
+      - TELEGRAM_BOT_TOKEN=${TELEGRAM_BOT_TOKEN}
+      - TELEGRAM_ADMIN_CHAT_ID=${TELEGRAM_ADMIN_CHAT_ID}
+      - WORKERS=4
+    deploy:
+      resources:
+        limits:
+          cpus: '2'
+          memory: 1G
+    restart: always
+
+  frontend:
+    build: ./frontend
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend
+    environment:
+      - NEXT_PUBLIC_API_URL=http://backend:8000
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 1G
+    restart: always
 
 volumes:
-  postgres_data: 
+  static_data:
+  db_data: 

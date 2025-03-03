@@ -1,16 +1,25 @@
-FROM node:20-alpine
+FROM node:18-alpine
 
 WORKDIR /app
 
+# Устанавливаем зависимости
 COPY package*.json ./
-RUN npm install
 
+# Устанавливаем зависимости с использованием кэша
+RUN npm ci
+
+# Копируем остальные файлы проекта
 COPY . .
 
-ENV DISABLE_ESLINT_PLUGIN=true
-ENV CI=false
-RUN npm run build || true
+# Настраиваем переменные окружения для оптимизации Next.js
+ENV NODE_ENV=production
+ENV NEXT_TELEMETRY_DISABLED=1
 
+# Собираем приложение
+RUN npm run build
+
+# Открываем порт
 EXPOSE 3000
 
+# Запускаем приложение
 CMD ["npm", "start"] 
