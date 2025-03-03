@@ -24,15 +24,7 @@ app = FastAPI(title="AltaiLand API")
 # Настройка CORS
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[
-        "http://localhost:3000",
-        "http://89.104.70.179:3000",
-        "http://altailands.ru",
-        "https://altailands.ru",
-        "http://www.altailands.ru",
-        "https://www.altailands.ru",
-        "http://frontend:3000",  # Для взаимодействия внутри Docker-сети
-    ],
+    allow_origins=["*"],
     allow_credentials=True,
     allow_methods=["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
     allow_headers=["*"],
